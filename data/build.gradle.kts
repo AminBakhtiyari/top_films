@@ -1,3 +1,8 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.jetbrains.kotlin.config.KotlinCompilerVersion
+import org.jetbrains.kotlin.konan.properties.propertyString
+import java.util.*
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -18,8 +23,12 @@ android {
     }
 
     buildTypes {
+
+        val tmdbApiKey: String? = gradleLocalProperties(rootDir).propertyString("tmdb_api_key", "")
+
         release {
-            buildConfigField("String", "BASE_API_URL", "\"http://158.255.74.25/api/\"")
+            buildConfigField("String", "BASE_API_URL", "\"https://api.themoviedb.org/3/\"")
+            buildConfigField("String", "TMDB_API_KEY", tmdbApiKey ?: "")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -28,7 +37,8 @@ android {
         }
 
         debug {
-            buildConfigField("String", "BASE_API_URL", "\"http://158.255.74.25/api/\"")
+            buildConfigField("String", "BASE_API_URL", "\"https://api.themoviedb.org/3/\"")
+            buildConfigField("String", "TMDB_API_KEY", tmdbApiKey ?: "")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
