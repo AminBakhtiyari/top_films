@@ -8,5 +8,5 @@ import retrofit2.http.Query
 interface ApiService {
 
     @GET("discover/movie")
-    suspend fun getMovies(@Query("page") page: Int = 1, @Query("primary_release_year") releaseYear: Int): MovieResponse
+    suspend fun getMovies(@Query("page") page: Int = 1, @Query("primary_release_year") releaseYear: Int = 2021): MovieResponse
 }
