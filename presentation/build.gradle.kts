@@ -62,6 +62,8 @@ dependencies {
     implementation(Deps.constraintLayout)
     implementation(Deps.androidxCore)
     implementation(Deps.androidxFragment)
+    implementation(Deps.navigationFragment)
+    implementation(Deps.navigationUi)
 
     //log
     implementation(Deps.timber)
