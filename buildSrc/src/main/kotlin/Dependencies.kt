@@ -33,5 +33,6 @@ object Deps {
     val multidex by lazy { "androidx.multidex:multidex:${Versions.multidex}" }
     val navigationFragment by lazy { "androidx.navigation:navigation-fragment-ktx:${Versions.navVersion}" }
     val navigationUi by lazy { "androidx.navigation:navigation-ui-ktx:${Versions.navVersion}" }
+    val coil by lazy { "io.coil-kt:coil:${Versions.coil}" }
     val junit by lazy { "junit:junit:${Versions.jUnit}" }
 }

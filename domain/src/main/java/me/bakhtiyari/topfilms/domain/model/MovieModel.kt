@@ -18,4 +18,13 @@ data class MovieModel(
     var adult: Boolean? = null,
     var overview: String? = null,
     var releaseDate: String? = null
-) : Parcelable
+) : Parcelable {
+
+    fun isEmpty(): Boolean {
+
+        return when (this.id) {
+            null -> true
+            else -> false
+        }
+    }
+}

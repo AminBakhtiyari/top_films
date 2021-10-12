@@ -71,9 +71,6 @@ dependencies {
 
     // hilt (DI)
     implementation(Deps.hiltAndroid)
-    implementation("androidx.appcompat:appcompat:1.3.1")
-    implementation("com.google.android.material:material:1.4.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.1")
     kapt(Deps.hiltAndroidCompiler)
 
     // retrofit
@@ -96,6 +93,9 @@ dependencies {
 
     //multidex
     implementation (Deps.multidex)
+
+    //glide
+    implementation (Deps.coil)
 
     //test
     testImplementation(Deps.junit)

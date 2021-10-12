@@ -8,7 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 
-abstract class BaseFragment<B : ViewDataBinding>(private val layout: Int) : Fragment(), HandlerActionsListener {
+abstract class BaseFragment<B : ViewDataBinding>(private val layout: Int) : Fragment() {
 
     private lateinit var v: View
     protected lateinit var binding: B

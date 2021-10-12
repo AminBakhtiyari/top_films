@@ -19,5 +19,6 @@ object Versions {
     const val multidex = "2.0.1"
     const val jUnit = "4.12"
     const val navVersion = "2.3.5"
+    const val coil = "1.4.0"
 
 }
