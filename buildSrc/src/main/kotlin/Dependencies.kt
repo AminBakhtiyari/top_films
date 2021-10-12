@@ -31,5 +31,7 @@ object Deps {
     val lifecycleArch by lazy { "android.arch.lifecycle:extensions:${Versions.lifecycleArch}" }
     val legacy by lazy { "androidx.legacy:legacy-support-v4:${Versions.legacy}" }
     val multidex by lazy { "androidx.multidex:multidex:${Versions.multidex}" }
+    val navigationFragment by lazy { "androidx.navigation:navigation-fragment-ktx:${Versions.navVersion}" }
+    val navigationUi by lazy { "androidx.navigation:navigation-ui-ktx:${Versions.navVersion}" }
     val junit by lazy { "junit:junit:${Versions.jUnit}" }
 }
