@@ -2,8 +2,10 @@ package me.bakhtiyari.topfilms.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import dagger.hilt.android.AndroidEntryPoint
 import me.bakhtiyari.topfilms.R
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     /*val navHostFragment by lazy { supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment }
