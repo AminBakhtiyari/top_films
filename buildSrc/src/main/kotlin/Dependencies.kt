@@ -34,5 +34,8 @@ object Deps {
     val navigationFragment by lazy { "androidx.navigation:navigation-fragment-ktx:${Versions.navVersion}" }
     val navigationUi by lazy { "androidx.navigation:navigation-ui-ktx:${Versions.navVersion}" }
     val coil by lazy { "io.coil-kt:coil:${Versions.coil}" }
+    val paging by lazy { "androidx.paging:paging-runtime:${Versions.paging}" }
+    val coroutines by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}" }
+    val coroutinesAndroid by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}" }
     val junit by lazy { "junit:junit:${Versions.jUnit}" }
 }

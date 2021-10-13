@@ -1,9 +1,10 @@
 package me.bakhtiyari.topfilms.domain.repository
 
+import androidx.lifecycle.LiveData
+import androidx.paging.PagingData
 import me.bakhtiyari.topfilms.domain.model.MovieModel
-import me.bakhtiyari.topfilms.domain.util.Result
 
 
 interface ApiRepository {
-    suspend fun getMovies(page: Int?, releaseYear: Int?): Result<ArrayList<MovieModel>, String>
+    suspend fun getMovies(releaseYear: Int?): LiveData<PagingData<MovieModel>>
 }

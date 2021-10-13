@@ -1,15 +1,14 @@
 package me.bakhtiyari.topfilms.ui.movies
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import androidx.lifecycle.switchMap
+import androidx.lifecycle.*
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import me.bakhtiyari.topfilms.domain.model.MovieModel
 import me.bakhtiyari.topfilms.domain.repository.ApiRepository
+import me.bakhtiyari.topfilms.ui.base.RefreshableLiveData
 import javax.inject.Inject
-import me.bakhtiyari.topfilms.domain.util.Result
 
 
 @HiltViewModel
@@ -17,18 +16,23 @@ class MoviesViewModel @Inject constructor(
     private val apiRepository: ApiRepository
 ) : ViewModel() {
 
-    val page = 1
     val releaseYear = MutableLiveData<Int>()
+
     val isLoading = MutableLiveData<Boolean>()
+    val isVisible = MutableLiveData<Boolean>()
     val msgError = MutableLiveData<String>()
-    val movies = MutableLiveData<ArrayList<MovieModel>>()
 
-    val getMovies = releaseYear.switchMap {
-
-        liveData(Dispatchers.IO) {
-
-            emit(Result.Loading())
-            emit(apiRepository.getMovies(1, it))
+    val movies = RefreshableLiveData {
+        runBlocking {
+            getMovies()
         }
+    }
+
+    fun refresh() {
+        movies.refresh()
+    }
+
+    private suspend fun getMovies(): LiveData<PagingData<MovieModel>> {
+        return apiRepository.getMovies(releaseYear.value).cachedIn(viewModelScope)
     }
 }
