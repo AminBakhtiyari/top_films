@@ -6,4 +6,5 @@ interface StateManager {
     fun onLoading(isLoading: Boolean)
     fun onGet(movies: ArrayList<MovieModel>)
     fun onError(msg: String)
+    fun showDialog(isShowing: Boolean)
 }
