@@ -25,7 +25,7 @@ object ApiModule {
     @HttpLoggingInterceptorOkHttpClient
     @Singleton
     @Provides
-    fun providesHttpLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+    fun providesHttpLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.NONE }
 
 
     @ApiKeyInterceptorOkHttpClient
