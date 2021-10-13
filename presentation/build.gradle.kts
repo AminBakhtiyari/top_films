@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+    id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
 }
 
@@ -62,6 +63,8 @@ dependencies {
     implementation(Deps.constraintLayout)
     implementation(Deps.androidxCore)
     implementation(Deps.androidxFragment)
+    implementation(Deps.navigationFragment)
+    implementation(Deps.navigationUi)
 
     //log
     implementation(Deps.timber)
@@ -69,9 +72,7 @@ dependencies {
 
     // hilt (DI)
     implementation(Deps.hiltAndroid)
-    implementation("androidx.appcompat:appcompat:1.3.1")
-    implementation("com.google.android.material:material:1.4.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.1")
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
     kapt(Deps.hiltAndroidCompiler)
 
     // retrofit
@@ -94,6 +95,9 @@ dependencies {
 
     //multidex
     implementation (Deps.multidex)
+
+    //glide
+    implementation (Deps.coil)
 
     //test
     testImplementation(Deps.junit)
