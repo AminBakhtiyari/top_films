@@ -20,5 +20,7 @@ object Versions {
     const val jUnit = "4.12"
     const val navVersion = "2.3.5"
     const val coil = "1.4.0"
+    const val paging = "3.0.1"
+    const val coroutines = "1.5.2"
 
 }

@@ -54,7 +54,7 @@
             android:layout_height="0dp"
             android:minHeight="200dp"
             android:padding="10dp"
-            android:visibility="@{viewModel.isLoading ? View.GONE : View.VISIBLE, default=visible}"
+            android:visibility="@{viewModel.isVisible() ? View.VISIBLE : View.GONE, default=visible}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -83,7 +83,6 @@
             android:src="@drawable/ic_filter"
             app:fabCustomSize="50dp"
             app:tint="@color/white"
-            android:visibility="@{viewModel.movies == null ? View.GONE : View.VISIBLE, default=visible}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:onClick="@{() -> actionsListener.openSelectYear()}"/>
