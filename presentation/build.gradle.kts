@@ -96,8 +96,11 @@ dependencies {
     //multidex
     implementation (Deps.multidex)
 
-    //glide
+    //coil
     implementation (Deps.coil)
+
+    // paging
+    implementation(Deps.paging)
 
     //test
     testImplementation(Deps.junit)

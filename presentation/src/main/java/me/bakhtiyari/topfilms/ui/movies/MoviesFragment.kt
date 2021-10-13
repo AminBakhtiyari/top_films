@@ -6,8 +6,9 @@ import android.view.Window
 import android.widget.Toast
 import androidx.databinding.library.baseAdapters.BR
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,7 +17,6 @@ import me.bakhtiyari.topfilms.databinding.DialogSelectYearBinding
 import me.bakhtiyari.topfilms.databinding.FragmentMoviesBinding
 import me.bakhtiyari.topfilms.domain.model.MovieModel
 import me.bakhtiyari.topfilms.ui.base.BaseFragment
-import me.bakhtiyari.topfilms.domain.util.Result
 import me.bakhtiyari.topfilms.ui.base.UniversalDataBindingRecyclerAdapter
 import timber.log.Timber
 
@@ -25,19 +25,8 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(R.layout.fragment_mov
 
     private val moviesViewModel: MoviesViewModel by viewModels()
 
-    private val getMoviesObserver = Observer<Result<ArrayList<MovieModel>, String>> {
-
-        when (it) {
-            is Result.Success -> {
-                onGet(it.success() ?: arrayListOf())
-            }
-            is Result.Error -> {
-                onError(it.error() ?: "")
-            }
-            is Result.Loading -> {
-                onLoading(isLoading = true)
-            }
-        }
+    private val movieListAdapter by lazy {
+        MovieListAdapter(this)
     }
 
     private lateinit var selectYearDialog: Dialog
@@ -50,14 +39,15 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(R.layout.fragment_mov
     }
 
     override fun initObserves() {
-        moviesViewModel.getMovies.observe(this, getMoviesObserver)
+        moviesViewModel.movies.observe(viewLifecycleOwner) {
+            movieListAdapter.submitData(lifecycle, it)
+        }
     }
 
     override fun initViews() {
-        if (moviesViewModel.movies.value == null) {
-            moviesViewModel.releaseYear.postValue(null)
-        } else { loadMovies() }
-
+        binding.gridMovieListView.layoutManager = GridLayoutManager(context, 2)
+        binding.gridMovieListView.adapter = movieListAdapter
+        initAdapter()
     }
 
 
@@ -73,22 +63,18 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(R.layout.fragment_mov
 
     override fun selectedYear(year: String) {
         showDialog(false)
-        moviesViewModel.releaseYear.postValue(when(year) {
+        moviesViewModel.releaseYear.value = when(year) {
             "All" -> null
             else -> year.toInt()
-        })
+        }
+        moviesViewModel.refresh()
+
+
     }
 
     override fun onLoading(isLoading: Boolean) {
 
         moviesViewModel.isLoading.value = isLoading
-    }
-
-    override fun onGet(movies: ArrayList<MovieModel>) {
-
-        moviesViewModel.movies.value = movies
-        onLoading(isLoading = false)
-        loadMovies()
     }
 
     override fun onError(msg: String) {
@@ -105,21 +91,29 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(R.layout.fragment_mov
         }
     }
 
+    private fun initAdapter() {
+        movieListAdapter.addLoadStateListener { loadState ->
+            // show empty list
+            val isListEmpty = loadState.refresh is LoadState.NotLoading && movieListAdapter.itemCount == 0
+            moviesViewModel.isVisible.value = isListEmpty
 
-    private fun loadMovies() {
+            // Only show the list if refresh succeeds.
+            moviesViewModel.isVisible.value = loadState.source.refresh is LoadState.NotLoading
 
-        val adapter = UniversalDataBindingRecyclerAdapter(
-            data = moviesViewModel.movies.value ?: arrayListOf(),
-            layout = R.layout.item_grid_normall_movie_contents
-        ) { view, model, _ ->
-            view.setVariable(BR.actionsListener, this)
-            view.setVariable(BR.content, model)
-            view.executePendingBindings()
+            // Show loading spinner during initial load or refresh.
+            onLoading(loadState.source.refresh is LoadState.Loading)
+
+            // If we have an error, show a toast
+            val errorState = when {
+                loadState.append is LoadState.Error -> loadState.append as LoadState.Error
+                loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
+                loadState.refresh is LoadState.Error -> loadState.refresh as LoadState.Error
+                else -> null
+            }
+            errorState?.let {
+                onError(it.error.message.toString())
+            }
         }
-
-        binding.gridMovieListView.layoutManager = GridLayoutManager(context, 2)
-        binding.gridMovieListView.adapter = adapter
-
     }
 
     private fun getSelectYearDialog(): Dialog {

@@ -55,4 +55,7 @@ dependencies {
 
     // Gson
     implementation(Deps.gson)
+
+    // paging
+    implementation(Deps.paging)
 }
