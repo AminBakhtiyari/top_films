@@ -12,8 +12,6 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import me.bakhtiyari.topfilms.R
 import me.bakhtiyari.topfilms.databinding.DialogSelectYearBinding
 import me.bakhtiyari.topfilms.databinding.FragmentMoviesBinding
