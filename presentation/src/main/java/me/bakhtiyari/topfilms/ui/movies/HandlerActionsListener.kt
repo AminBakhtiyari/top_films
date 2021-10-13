@@ -1,6 +1,8 @@
 package me.bakhtiyari.topfilms.ui.movies
 
+import me.bakhtiyari.topfilms.domain.model.MovieModel
+
 interface HandlerActionsListener {
 
-    fun openMovie(movieId: Int)
+    fun openMovie(movie: MovieModel)
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import me.bakhtiyari.topfilms.domain.model.MovieModel
 import me.bakhtiyari.topfilms.domain.repository.ApiRepository
 import javax.inject.Inject
 import me.bakhtiyari.topfilms.domain.util.Result
@@ -20,6 +21,7 @@ class MoviesViewModel @Inject constructor(
     val releaseYear = MutableLiveData<Int>()
     val isLoading = MutableLiveData<Boolean>()
     val msgError = MutableLiveData<String>()
+    val movies = MutableLiveData<ArrayList<MovieModel>>()
 
     val getMovies = releaseYear.switchMap {
 
