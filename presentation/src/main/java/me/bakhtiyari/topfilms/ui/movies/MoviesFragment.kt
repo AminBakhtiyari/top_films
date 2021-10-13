@@ -1,13 +1,18 @@
 package me.bakhtiyari.topfilms.ui.movies
 
+import android.app.Dialog
+import android.view.LayoutInflater
+import android.view.Window
 import android.widget.Toast
 import androidx.databinding.library.baseAdapters.BR
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import me.bakhtiyari.topfilms.R
+import me.bakhtiyari.topfilms.databinding.DialogSelectYearBinding
 import me.bakhtiyari.topfilms.databinding.FragmentMoviesBinding
 import me.bakhtiyari.topfilms.domain.model.MovieModel
 import me.bakhtiyari.topfilms.ui.base.BaseFragment
@@ -35,9 +40,12 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(R.layout.fragment_mov
         }
     }
 
+    private lateinit var selectYearDialog: Dialog
+
     override fun initVariables() {
 
         binding.viewModel = moviesViewModel
+        binding.actionsListener = this
 
     }
 
@@ -53,25 +61,22 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(R.layout.fragment_mov
     }
 
 
-    private fun loadMovies() {
-
-        val adapter = UniversalDataBindingRecyclerAdapter(
-            data = moviesViewModel.movies.value ?: arrayListOf(),
-            layout = R.layout.item_grid_normall_movie_contents
-        ) { view, model, _ ->
-            view.setVariable(BR.actionsListener, this)
-            view.setVariable(BR.content, model)
-            view.executePendingBindings()
-        }
-
-        binding.gridMovieListView.layoutManager = GridLayoutManager(context, 2)
-        binding.gridMovieListView.adapter = adapter
-
-    }
-
     override fun openMovie(movie: MovieModel) {
         val directions = MoviesFragmentDirections.actionMoviesFragmentToMovieFragment(movie)
         findNavController().navigate(directions)
+    }
+
+    override fun openSelectYear() {
+        selectYearDialog = getSelectYearDialog()
+        showDialog(true)
+    }
+
+    override fun selectedYear(year: String) {
+        showDialog(false)
+        moviesViewModel.releaseYear.postValue(when(year) {
+            "All" -> null
+            else -> year.toInt()
+        })
     }
 
     override fun onLoading(isLoading: Boolean) {
@@ -91,5 +96,59 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(R.layout.fragment_mov
             Timber.e("error: $it")
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
         }
+    }
+
+    override fun showDialog(isShowing: Boolean) {
+        when(isShowing) {
+            true -> selectYearDialog.show()
+            else -> selectYearDialog.dismiss()
+        }
+    }
+
+
+    private fun loadMovies() {
+
+        val adapter = UniversalDataBindingRecyclerAdapter(
+            data = moviesViewModel.movies.value ?: arrayListOf(),
+            layout = R.layout.item_grid_normall_movie_contents
+        ) { view, model, _ ->
+            view.setVariable(BR.actionsListener, this)
+            view.setVariable(BR.content, model)
+            view.executePendingBindings()
+        }
+
+        binding.gridMovieListView.layoutManager = GridLayoutManager(context, 2)
+        binding.gridMovieListView.adapter = adapter
+
+    }
+
+    private fun getSelectYearDialog(): Dialog {
+
+        val dialog = Dialog(binding.body.context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val dialogBinding = DialogSelectYearBinding.inflate(LayoutInflater.from(context))
+        dialog.setContentView(dialogBinding.root)
+
+
+        val years = arrayListOf<String>()
+        years.add("All")
+        years.addAll((1990..2021).toList().reversed().map { n -> n.toString() })
+
+        val adapter = UniversalDataBindingRecyclerAdapter(
+            data = years,
+            layout = R.layout.item_year_contents
+
+        ) { view, model, _ ->
+
+            view.setVariable(BR.actionsListener, this)
+            view.setVariable(BR.content, model)
+            view.executePendingBindings()
+        }
+
+        dialogBinding.gridListYears.layoutManager = LinearLayoutManager(binding.body.context)
+        dialogBinding.gridListYears.adapter = adapter
+
+
+        return dialog
     }
 }
