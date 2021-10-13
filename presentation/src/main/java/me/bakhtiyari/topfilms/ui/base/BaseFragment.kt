@@ -1,6 +1,7 @@
 package me.bakhtiyari.topfilms.ui.base
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,6 @@ abstract class BaseFragment<B : ViewDataBinding>(private val layout: Int) : Frag
 
     private lateinit var v: View
     protected lateinit var binding: B
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,5 +34,4 @@ abstract class BaseFragment<B : ViewDataBinding>(private val layout: Int) : Frag
     abstract fun initVariables()
     abstract fun initObserves()
     abstract fun initViews()
-
 }

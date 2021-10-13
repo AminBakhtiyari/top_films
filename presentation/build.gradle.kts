@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+    id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
 }
 
@@ -71,6 +72,7 @@ dependencies {
 
     // hilt (DI)
     implementation(Deps.hiltAndroid)
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
     kapt(Deps.hiltAndroidCompiler)
 
     // retrofit

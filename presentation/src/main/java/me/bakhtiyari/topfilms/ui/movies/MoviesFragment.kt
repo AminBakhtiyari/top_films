@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.databinding.library.baseAdapters.BR
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import me.bakhtiyari.topfilms.R
@@ -37,7 +38,7 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(R.layout.fragment_mov
     override fun initVariables() {
 
         binding.viewModel = moviesViewModel
-        moviesViewModel.releaseYear.postValue(null)
+
     }
 
     override fun initObserves() {
@@ -45,14 +46,17 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(R.layout.fragment_mov
     }
 
     override fun initViews() {
-        binding.gridMovieListView.layoutManager = GridLayoutManager(context, 2)
+        if (moviesViewModel.movies.value == null) {
+            moviesViewModel.releaseYear.postValue(null)
+        } else { loadMovies() }
+
     }
 
 
-    private fun loadMovies(movies: ArrayList<MovieModel>) {
+    private fun loadMovies() {
 
         val adapter = UniversalDataBindingRecyclerAdapter(
-            data = movies,
+            data = moviesViewModel.movies.value ?: arrayListOf(),
             layout = R.layout.item_grid_normall_movie_contents
         ) { view, model, _ ->
             view.setVariable(BR.actionsListener, this)
@@ -60,13 +64,14 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(R.layout.fragment_mov
             view.executePendingBindings()
         }
 
-
+        binding.gridMovieListView.layoutManager = GridLayoutManager(context, 2)
         binding.gridMovieListView.adapter = adapter
 
     }
 
-    override fun openMovie(movieId: Int) {
-
+    override fun openMovie(movie: MovieModel) {
+        val directions = MoviesFragmentDirections.actionMoviesFragmentToMovieFragment(movie)
+        findNavController().navigate(directions)
     }
 
     override fun onLoading(isLoading: Boolean) {
@@ -76,8 +81,9 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(R.layout.fragment_mov
 
     override fun onGet(movies: ArrayList<MovieModel>) {
 
+        moviesViewModel.movies.value = movies
         onLoading(isLoading = false)
-        loadMovies(movies)
+        loadMovies()
     }
 
     override fun onError(msg: String) {
@@ -86,5 +92,4 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(R.layout.fragment_mov
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
         }
     }
-
 }
